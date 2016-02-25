@@ -10,14 +10,13 @@ echo "Stopping Qthttpd hogging port 80.."
 
 mkdir -p tmp-webroot/.well-known/acme-challenge
 cd tmp-webroot
-python -m SimpleHTTPServer 80 &
+python -m http.server &
 cd ..
 pid=$!
 echo "Started python SimpleHTTPServer with pid $pid"
 
-export SSL_CERT_FILE=ca-bundle.crt
 python acme-tiny/acme_tiny.py --account-key letsencrypt/account.key --csr letsencrypt/domain.csr --acme-dir tmp-webroot/.well-known/acme-challenge > letsencrypt/signed.crt
-wget -O - https://letsencrypt.org/certs/lets-encrypt-x1-cross-signed.pem > letsencrypt/intermediate.pem
+wget --no-check-certificate -O - https://letsencrypt.org/certs/lets-encrypt-x1-cross-signed.pem > letsencrypt/intermediate.pem
 cat letsencrypt/signed.crt letsencrypt/intermediate.pem > letsencrypt/chained.pem
 
 echo "Stopping stunnel and setting new stunnel certificates..."
