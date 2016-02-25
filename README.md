@@ -1,4 +1,5 @@
 1. run `init.sh`
+
 2. create a csr:
 
 	**single domain cert:** (replace nas.xxx.de with your domain name)
@@ -13,7 +14,9 @@
 	openssl req -new -sha256 -key keys/domain.key -subj "/" -reqexts SAN -config openssl-csr-config.cnf > domain.csr
 	``` 
 4. `mv /etc/stunnel/stunnel.pem /etc/stunnel/stunnel.pem.orig` (backup)
+
 5. run `renew_certificate.sh`
+
 6. account.key, domain.key and even the csr (according to acme-tiny readme) can be reused, so just create a cronjob to run `renew_certificate.sh` every night (certificate will only be renewed if <30 days left)
     example: (make sure to use crontab -e!)
     ```
